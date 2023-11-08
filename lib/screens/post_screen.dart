@@ -18,8 +18,13 @@ import 'herodialogroute.dart';
 const String _heroAddTodo = 'add-todo-hero';
 class ExpandedPostPage extends StatelessWidget {
   final String? postBody;
+  final String? postTitle;
+  final String? postImage;
+  final String? poster;
+  final DateTime time;
+  final String? posterImage;
 
-  ExpandedPostPage({required this.postBody});
+  ExpandedPostPage({required this.postBody,required this.postTitle, required this.postImage, required this.poster, required this.time, required this.posterImage});
 
   @override
   Widget build(BuildContext context) {
@@ -28,63 +33,136 @@ class ExpandedPostPage extends StatelessWidget {
       child: Center(
         child: Padding(
           padding: const EdgeInsets.fromLTRB(12, 40, 12, 32),
-          child: Hero(
-            tag: _heroAddTodo,
-            child: Material(
-              color: Colors.white,
-              elevation: 2,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-              child: Column(
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                    ),
-                    child: Container(
-                      color: Colors.blue,
-                      padding: EdgeInsets.symmetric(horizontal: 16),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            "Post Title",
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
-                            ),
-                          ),
-                          IconButton(
-                            icon: Icon(Icons.close),
-                            onPressed: () {
-                              Navigator.of(context).pop();
-                            },
-                          ),
-                        ],
+          child: Material(
+            color: Colors.white,
+            elevation: 2,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Column(
+              children: [
+                Stack(
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(7.5),
+                        topRight: Radius.circular(7.5),
                       ),
-                    ),
-                  ),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            SizedBox(height: 5),
-                            Text(
-                              postBody!,
-                              style: TextStyle(fontSize: 18),
-                            ),
-                          ],
+                      child: Container(
+                        height: 66,
+                        color: tuDarkBlue,
+                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        child: SingleChildScrollView(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Padding(
+                                padding:
+                                EdgeInsets.symmetric(horizontal: 11),
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+
+                                  children: [
+                                    Container(
+                                      width: 40,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        image: posterImage != null
+                                            ? DecorationImage(
+                                            image: NetworkImage(
+                                                '${posterImage}'))
+                                            : null,
+                                        borderRadius:
+                                        BorderRadius.circular(25),
+                                        border: Border.all(
+                                          color: tuDarkBlue, // Border color
+                                          width: 2, // Border width
+                                        ),
+                                      ),
+                                      child: const CircleAvatar(
+                                        radius: 25, // Adjust the radius to increase the size
+                                        backgroundColor: Colors.grey, // Background color for the CircleAvatar
+                                        child: Icon(
+                                          Icons.person, // You can replace this with your profile picture
+                                          color: Colors.white, // Icon color
+                                        ),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: 10,
+                                    ),
+                                    Column(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            '${poster}',
+                                            style: TextStyle(
+                                                fontWeight: FontWeight.w600,
+                                                fontSize: 18),
+                                          ),
+                                          Text(
+                                            DateFormat('HH:mm, dd/MM/yy').format(time),
+                                            style: TextStyle(
+                                              fontSize: 14,
+                                            ),
+                                          ),
+                                        ]
+                                    )
+
+                                  ],
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
+                    Positioned(
+                      top: 3,
+                      right: 0,
+                      child: IconButton(
+                        color: Colors.white,
+                        icon: Icon(Icons.close),
+                        onPressed: () {
+                          Navigator.of(context).pop();
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+                Expanded(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        postImage != null
+                            ? Container(
+                          width: MediaQuery.of(context).size.width,
+                          height: 400,
+                          margin: const EdgeInsets.only(top: 0),
+                          decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image:
+                                  NetworkImage('${postImage}'),
+                                  fit: BoxFit.cover)),
+                        )
+                            : SizedBox(
+                          height: postImage != null ? 0 : 10,
+                        ),
+                        SizedBox(height: 5),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(16, 0, 16, 16),
+                          child: Text(
+                            postBody!,
+                            style: TextStyle(fontSize: 18),
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
-                ],
-              ),
+                ),
+              ],
             ),
           ),
         ),
@@ -426,7 +504,7 @@ class _PostScreenState extends State<PostScreen> {
                                   ? InkWell(
                                 onTap: () {
                                   Navigator.of(context).push(HeroDialogRoute(builder: (context) {
-                                    return ExpandedPostPage(postBody: post.title);
+                                    return ExpandedPostPage(postBody: post.title, postTitle: post.body, postImage: post.image, poster: post.user!.name, time: localDateTime, posterImage: post.user!.image);
                                   }));
                                 },
                                 // onTap: () {
@@ -544,7 +622,7 @@ class _PostScreenState extends State<PostScreen> {
                           post.image != null
                               ? Container(
                             width: MediaQuery.of(context).size.width,
-                            height: 280,
+                            height: 400,
                             margin: const EdgeInsets.only(top: 0),
                             decoration: BoxDecoration(
                                 image: DecorationImage(
