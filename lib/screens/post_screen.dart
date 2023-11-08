@@ -51,7 +51,7 @@ class ExpandedPostPage extends StatelessWidget {
                       child: Container(
                         height: 66,
                         color: tuDarkBlue,
-                        padding: EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+                        padding: EdgeInsets.symmetric(horizontal: 4, vertical:7),
                         child: SingleChildScrollView(
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -75,12 +75,12 @@ class ExpandedPostPage extends StatelessWidget {
                                         borderRadius:
                                         BorderRadius.circular(25),
                                         border: Border.all(
-                                          color: tuDarkBlue, // Border color
+                                          color: tuLightBlue, // Border color
                                           width: 2, // Border width
                                         ),
                                       ),
                                       child: const CircleAvatar(
-                                        radius: 25, // Adjust the radius to increase the size
+                                        radius: 28, // Adjust the radius to increase the size
                                         backgroundColor: Colors.grey, // Background color for the CircleAvatar
                                         child: Icon(
                                           Icons.person, // You can replace this with your profile picture
@@ -98,12 +98,14 @@ class ExpandedPostPage extends StatelessWidget {
                                           Text(
                                             '${poster}',
                                             style: TextStyle(
+                                              color: Colors.white,
                                                 fontWeight: FontWeight.w600,
                                                 fontSize: 18),
                                           ),
                                           Text(
                                             DateFormat('HH:mm, dd/MM/yy').format(time),
                                             style: TextStyle(
+                                              color: Colors.white,
                                               fontSize: 14,
                                             ),
                                           ),
